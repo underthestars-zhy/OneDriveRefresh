@@ -1,5 +1,22 @@
 import JAYSON
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+
+extension URLSession {
+    func data(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse) {
+        return try await withCheckedThrowingContinuation { continuation in
+            self.dataTask(with: request) { data, reponse, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: (data!, reponse!))
+                }
+            }.resume()
+        }
+    }
+}
+#endif
 
 public struct OneDriveRefresh {
     private let recentToken: String
@@ -27,6 +44,7 @@ public struct OneDriveRefresh {
         guard let url = URL(string: "https://login.microsoftonline.com/common/oauth2/token") else { return nil }
         
         var request = URLRequest(url: url)
+        
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = header
         request.httpBody = conponents.query?.data(using: .utf8)
