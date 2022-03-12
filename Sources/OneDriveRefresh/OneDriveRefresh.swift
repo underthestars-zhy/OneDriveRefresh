@@ -1,4 +1,4 @@
-import SwiftyJSON
+import JAYSON
 import Foundation
 
 public struct OneDriveRefresh {
@@ -39,6 +39,6 @@ public struct OneDriveRefresh {
         
         let json = try JSON(data: data)
         
-        return json["refresh_token"].string
+        return json["refresh_token"]?.string
     }
 }
