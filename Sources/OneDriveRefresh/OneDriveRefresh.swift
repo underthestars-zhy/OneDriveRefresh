@@ -28,10 +28,14 @@ public struct OneDriveRefresh {
     }
     
     public func refresh() async throws -> String? {
-        try await startPost()
+        try await startPost()?.0
+    }
+
+    public func access() async throws -> String? {
+        try await startPost()?.1
     }
     
-    func startPost() async throws -> String? {
+    func startPost() async throws -> (String?, String?)? {
         let header = ["Content-Type": "application/x-www-form-urlencoded"]
         var conponents = URLComponents()
         
@@ -57,6 +61,6 @@ public struct OneDriveRefresh {
         
         let json = try JSON(data: data)
         
-        return json["refresh_token"]?.string
+        return (json["refresh_token"]?.string, json["access_token"]?.string)
     }
 }
