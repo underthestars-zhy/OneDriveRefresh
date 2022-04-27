@@ -35,6 +35,7 @@ public struct OneDriveRefresh {
         try await startPost()?.1
     }
 
+    @discardableResult
     public func accessWithAsync(_ handel: @escaping (String?, Error?) -> ()) throws -> Progress {
         return try startPostWithoutAsync { res, error in
             if let error = error {
